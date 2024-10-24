@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Layout, Menu, Drawer, Grid, Avatar, Badge, Dropdown, notification } from "antd";
-import "./CustomHeader.scss"; // Import SCSS file
-import { MenuOutlined, ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
+import "./CustomHeader.scss";
+import { KeyOutlined, MenuOutlined, ShoppingCartOutlined, SolutionOutlined, UserOutlined } from "@ant-design/icons";
 import SubMenu from "antd/es/menu/SubMenu";
 import CartModal from "../../pages/product/cartModal";
 import { useDispatch, useSelector } from "react-redux";
-import { selectTotalProducts } from "../../slices/product.slice"; // Import selector
-import { logOut } from "../../slices/auth.slice";
+import { selectTotalProducts } from "../../slices/product.slice";
+import { logOut, selectCurrentToken, selectCurrentUser } from "../../slices/auth.slice";
 
 const { Header } = Layout;
 const { useBreakpoint } = Grid;
@@ -17,23 +17,53 @@ const CustomHeader = () => {
     const [prevScrollPos, setPrevScrollPos] = useState(0);
     const [visible, setVisible] = useState(true);
     const [drawerVisible, setDrawerVisible] = useState(false);
-    const [cartVisible, setCartVisible] = useState(false); 
-    const totalProducts = useSelector(selectTotalProducts); 
+    const [cartVisible, setCartVisible] = useState(false);
+    const totalProducts = useSelector(selectTotalProducts);
     const navigate = useNavigate();
-
-    const toggleCartModal = () => {
-        setCartVisible(!cartVisible);
-    };
+    const token = useSelector(selectCurrentToken)
     const dispatch = useDispatch();
 
-    const handleLogout = () => {
+
+    const toggleCartModal = useCallback(() => {
+        setCartVisible(prev => !prev);
+    }, []);
+
+    const handleLogout = useCallback(() => {
         dispatch(logOut());
         notification.success({
             message: "Logout successfully",
             description: "See you again!",
         });
-        navigate("/login")
-    };
+        navigate("/login");
+    }, [dispatch, navigate]);
+
+    const menu = useMemo(() => (
+        <Menu>
+            {token ? (
+                <>
+                    <Menu.Item key="profile">
+                        <Link to="/user-profile">User Profile</Link>
+                    </Menu.Item>
+                    <Menu.Item key="history">
+                        <Link to="/user-transaction-history">Transaction History</Link>
+                    </Menu.Item>
+                    <Menu.Item key="logout">
+                        <Link onClick={handleLogout}>Log out</Link>
+                    </Menu.Item>
+                </>
+            ) : (
+                <>
+                    <Menu.Item key="login">
+                        <p> <Link to="/login" className="flex gap-8 justify-between flex-row"> <p>Log in</p><p> <KeyOutlined /></p></Link> </p>
+                    </Menu.Item>
+                    <Menu.Item key="register">
+                        <p> <Link to="/register" className="flex gap-8 justify-between flex-row"><p>Register</p> <p><SolutionOutlined /></p></Link> </p>
+                    </Menu.Item>
+                </>
+            )}
+        </Menu>
+    ), [token, handleLogout]);
+
 
     useEffect(() => {
         const handleScroll = () => {
@@ -47,20 +77,6 @@ const CustomHeader = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, [prevScrollPos]);
 
-
-    const menu = (
-        <Menu>
-            <Menu.Item key="profile">
-                <Link to="/user-profile">User Profile</Link>
-            </Menu.Item>
-            <Menu.Item key="history">
-                <Link to="/user-transaction-history">Transaction History</Link>
-            </Menu.Item>
-            <Menu.Item key="logout">
-                <Link onClick={handleLogout }>Log out</Link>
-            </Menu.Item>
-        </Menu>
-    );
 
     return (
         <Header id="header" className={visible ? "show" : "hidden"} style={{ zIndex: '1' }}>

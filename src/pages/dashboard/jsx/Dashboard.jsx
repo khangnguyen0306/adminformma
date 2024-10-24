@@ -43,7 +43,7 @@ function Dashboard() {
           <Row justify="center" align="middle" className="Home-layout">
             <Col xs={24} md={12}>
               <Card style={{ height: "100%" }} className="Card-container-home">
-                <div className="Bagde-card-container-home">
+                <div className="Bagde-card-container-home ">
                   <p>Join With Us!</p>
                 </div>
                 <h1 className="title-card-container-home">Old Treasures  <span style={{ color: '#5c98f2' }}>New Beginnings</span></h1>
@@ -166,8 +166,8 @@ function Dashboard() {
                       <p>Encourage Sustainable Consumption Habits</p>
                       <p>Exchanging old items encourages people to think and act more sustainably in their consumption habits.</p>
                     </div>
-                  </div>
 
+                  </div>
 
                 </Col>
               </Row>

@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { selectCurrenToken, selectCurrentUser } from "../slices/auth.slice";
+import { selectCurrentToken, selectCurrentUser } from "../slices/auth.slice";
 
 
 const AuthGuard = ({ allowedRoles, children }) => {
 
-  const token = useSelector(selectCurrenToken);
+  const token = useSelector(selectCurrentToken);
   const user = useSelector(selectCurrentUser);           //
   const location = useLocation();
 
