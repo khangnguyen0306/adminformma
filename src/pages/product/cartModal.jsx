@@ -3,14 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Modal, Button, Image, Space, Table, Checkbox, message } from 'antd';
 import { loadCartFromLocalStorage, removeFromCart, updateCartQuantity, clearPaidItems } from '../../slices/product.slice';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { selectCurrenToken } from '../../slices/auth.slice';
 import { Link, useLocation } from 'react-router-dom';
+import { selectCurrentToken } from '../../slices/auth.slice';
 
 const CartModal = ({ visible, onClose }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector(state => state.product.cart);
   const [selectedItems, setSelectedItems] = useState([]);
-  const token = useSelector(selectCurrenToken);
+  const token = useSelector(selectCurrentToken);
   const location = useLocation()
 
   useEffect(() => {

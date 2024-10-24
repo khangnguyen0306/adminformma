@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Form, Input, Button, Alert, notification } from "antd";
+import { Form, Input, Button, Alert, notification, Checkbox, message } from "antd";
 import "./Login.scss";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { LockFilled, LockOutlined, SmileFilled, SmileOutlined, UserOutlined } from "@ant-design/icons";
 import { setToken, setUser } from "../../slices/auth.slice";
 import { useLoginUserMutation } from "../../services/authAPI";
+import Cookies from "js-cookie";
 // import cookieParser from "cookie-parser";
 
 const LoginForm = () => {
@@ -14,39 +15,96 @@ const LoginForm = () => {
   const dispatch = useDispatch();
   const location = useLocation()
   const navigate = useNavigate();
-
+  const [rememberMe, setRememberMe] = useState(false);
   const [loginUser, { isLoading }] = useLoginUserMutation();
+
+
+  useEffect(() => {
+
+    const savedEmail = Cookies.get("rememberEmail");
+    const savedPassword = Cookies.get("rememberPassword");
+
+    if (savedEmail && savedPassword) {
+      form.setFieldsValue({
+        email: savedEmail,
+        password: savedPassword,
+      });
+      setRememberMe(true);
+    }
+  }, [form]);
+
+  const handleLoginSuccess = (data) => {
+    console.log(data)
+    if (data.user.roleName == "Seller") {
+      setTimeout(() => {
+        navigate('/seller');
+      }, 100)
+    } else if (data.user.roleName == "Admin") {
+      setTimeout(() => {
+        navigate('/admin');
+      }, 100)
+    } else {
+      navigate('/404');
+    }
+
+    const user = data;
+    const token = data.accessToken;
+    // const avatar = data.data.avatar;
+    dispatch(setUser(user));
+    dispatch(setToken(token));
+
+
+    // remember me
+    if (rememberMe) {
+      Cookies.set("rememberEmail", form.getFieldValue("email"), { expires: 7 });
+      Cookies.set("rememberPassword", form.getFieldValue("password"), { expires: 7 });
+    }
+
+    notification.info({
+      message: "Chào mừng bạn trở lại !",
+      duration: 2,
+      description: (
+        <div className="flex items-center relative">
+          <p className="font-bold ">{user.user.name} </p>
+        </div>
+      ),
+    });
+
+
+  };
+  const handleLoginFailure = (error, email) => {
+    if (error.data) {
+      setError("Tài khoản hoặc mật khẩu không đúng. vui lòng thử lại!");
+      // message.error(error.data.message);
+    } else {
+      setError("Tài khoản hoặc mật khẩu không đúng. vui lòng thử lại!");
+      notification.error({
+        message: "Lỗi đăng nhập",
+        description: "Tài khoản hoặc mật khẩu không đúng. vui lòng thử lại!",
+      });
+    }
+
+    form.resetFields();
+  };
+
 
   const handleSubmit = async (values) => {
     try {
-      const result = await loginUser({ username: values.email, password: values.password });
-      console.log(result);                                                                         // missing user Data
-      if (result.data.data.user && result.data.data.token) {
-        dispatch(setUser(result.data.data.user));
-        console.log(result.data.data.user)
-        dispatch(setToken(result.data.data.token));
-        localStorage.setItem("token", result.data.data.token);
-
-        notification.success({
-          message: "Login successfully",
-          description:
-            <div>
-              Welcome   {result.data.data.user.userName}   <SmileOutlined />
-            </div>,
-        });
-        const from = location.state?.from?.pathname || "/"; // Check for intended path
-        navigate(from)
+      const result = await loginUser({ email: values.email, password: values.password });
+      console.log(result);
+      if (result.data) {
+        handleLoginSuccess(result.data);
       } else {
-        notification.error({
-          message: "Login error",
-          description: "Invalid email or password. Try again!",
-        });
-        form.resetFields(); // Xóa dữ liệu trong các ô input
+        handleLoginFailure(result.error, values.login_identifier);
       }
     } catch (error) {
-      setError("An error occurred while attempting to log in");
+      console.error("Login error:", error);
+      message.error("An unexpected error occurred. Please try again later.");
     }
   };
+
+
+
 
   return (
     <div className="form-container">
@@ -76,6 +134,14 @@ const LoginForm = () => {
           rules={[{ required: true, message: "Please input your password!" }]}
         >
           <Input.Password placeholder="Password" size="large" className="form-input" prefix={<LockOutlined />} />
+        </Form.Item>
+        <Form.Item name="remember" valuePropName="checked">
+          <Checkbox
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+          >
+            Ghi nhớ đăng nhập
+          </Checkbox>
         </Form.Item>
 
         <Form.Item>

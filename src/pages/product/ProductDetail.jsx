@@ -8,7 +8,7 @@ import "./ProductDetail.scss"
 import { addToCart, loadCartFromLocalStorage, updateCartQuantity } from '../../slices/product.slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { ShoppingCartOutlined } from '@ant-design/icons';
-import { selectCurrenToken } from '../../slices/auth.slice';
+import { selectCurrentToken } from '../../slices/auth.slice';
 const ProductDetail = () => {
     const { productId } = useParams();
     const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const ProductDetail = () => {
     const { data: AllProduct, isLoadingAllProducts } = useGetAllProductQuery();
     const [mainImage, setMainImage] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const token = useSelector(selectCurrenToken);
+    const token = useSelector(selectCurrentToken);
 
     const handleIncreaseQuantity = () => {
         if (buyQuantity < ProductDetail.quantity) {

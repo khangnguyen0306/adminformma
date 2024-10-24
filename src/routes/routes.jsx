@@ -1,7 +1,8 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import Loadable from "./Loadable";
 import MainLayout from "../layout/MainLayout";
 import AuthGuard from "./AuthGuard";
+import SellerGuard from "./SellerGuard";
 const Login = Loadable({ loader: () => import("../pages/login/Login") });
 const Register = Loadable({ loader: () => import("../pages/register/Register") });
 const Home = Loadable({ loader: () => import("../pages/home/Home") });
@@ -12,55 +13,66 @@ const errorPage = Loadable({ loader: () => import("../pages/error/Error") });
 const Dashboard = Loadable({
   loader: () => import("../pages/dashboard/jsx/Dashboard"),
 });
-const Admin = Loadable({
-  loader: () => import("../pages/admin/Admin"),
+const Seller = Loadable({
+  loader: () => import("../pages/seller/flowerManagement/FlowerManager"),
 });
+
+
 export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: Login,
+    index: true,
+  },
+
   {
     path: "/login",
     element: Login,
-  },
-  {
-    path: "/register",
-    element: Register,
-  },
-  {
     index: true,
-    element: Dashboard,
   },
+
   {
-    path: "/product",
-    element: ProductPage,
-  },
-  {
-    path: "/productDetail/:productId",
-    element: ProductDetail,
-  },
-  {
+    path: "/seller",
     element: <MainLayout />,
     children: [
       {
-        path: "/",
-        element: <AuthGuard />,
+        element: <SellerGuard />,
         children: [
-
-          {
-            path: "home",
-            element: Home,
-          },
-          {
-            path: "admin",
-            element: Admin,
-          },
-          {
-            path: "user-profile",
-            element: UserProfile,
-          },
+          { index: true, element: Seller },
+          // { path: "users", element: ManageUser },
+          // { path: "users/user-details/:userId", element: Detail },
+          // { path: "courses", element: ManageCourse },
+          // { path: "money", element: Cost },
+          // { path: "quizs", element: Quiz },
+          // { path: "create-course", element: CreateCourse },
         ],
       },
-    ]
+    ],
   },
 
+  // {
+  //   path: "/admin",
+  //   element: <MainLayout />,
+  //   children: [
+  //     {
+  //       path: "/admin",
+  //       element: <Navigate to="/" replace />,
+  //     },
+  //     {
+  //       element: <AdminGuard />,
+  //       children: [
+  //         { index: true, element: Admin },
+  //         { index: true, path: "dashboard", element: Admin },
+  //         { path: "users", element: ManageUser },
+  //         { path: "users/user-details/:userId", element: Detail },
+  //         { path: "courses", element: ManageCourse },
+  //         { path: "money", element: Cost },
+  //         { path: "quizs", element: Quiz },
+  //         { path: "create-course", element: CreateCourse },
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     path: "*",
     element: errorPage,
