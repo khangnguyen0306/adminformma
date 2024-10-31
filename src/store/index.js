@@ -6,7 +6,12 @@ import { userAPI } from "../services/userAPI";
 import UserReducer from "../slices/user.slice";
 import { authApi } from "../services/authAPI";
 import AuthReducer from "../slices/auth.slice";
-
+import { orderApi } from "../services/orderApi";
+import OrderReducer from "../slices/order.slice";
+import { roleApi } from "../services/roleApi";
+import RoleReducer from "../slices/role.slice";
+import { chatApi } from "../services/chatApi";
+import ChatReducer from "../slices/chat.slice";
 import { combineReducers } from "redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
@@ -25,6 +30,10 @@ const persistedReducer = persistReducer(persistConfig, flowerReducer);
 const ProductPerisReducer = persistReducer(persistConfig, ProductReducer);
 const UserPerisReducer = persistReducer(persistConfig, UserReducer);
 const AuthPerisReducer = persistReducer(persistConfig, AuthReducer);
+const orderPersistReducer = persistReducer(persistConfig, OrderReducer);
+const rolePersistReducer = persistReducer(persistConfig, RoleReducer);
+const chatPersistReducer = persistReducer(persistConfig, ChatReducer);
+
 export const store = configureStore({
   reducer: {
     [flowerApi.reducerPath]: flowerApi.reducer,
@@ -35,13 +44,22 @@ export const store = configureStore({
     user: UserPerisReducer,
     [authApi.reducerPath]: authApi.reducer,
     auth: AuthPerisReducer,
+    [orderApi.reducerPath]: orderApi.reducer,
+    order: orderPersistReducer,
+    [roleApi.reducerPath]: roleApi.reducer,
+    role: rolePersistReducer,
+    [chatApi.reducerPath]: chatApi.reducer,
+    chat: chatPersistReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       flowerApi.middleware,
       productAPI.middleware,
       userAPI.middleware,
-      authApi.middleware
+      authApi.middleware,
+      orderApi.middleware,
+      roleApi.middleware,
+      chatApi.middleware,
     ),
 });
 
