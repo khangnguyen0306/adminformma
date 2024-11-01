@@ -18,7 +18,7 @@ const EditFlower = ({ flower, onClose, refetch, onCreate }) => {
             uid: '-1',
             name: 'flower-image',
             status: 'done',
-            url: "http://localhost:8000/"+flowerData.imageUrl,
+            url: "http://localhost:8000/" + flowerData.imageUrl,
           },
         ]);
       }
@@ -61,7 +61,12 @@ const EditFlower = ({ flower, onClose, refetch, onCreate }) => {
   if (isLoadingData) return <Skeleton active />;
 
   return (
-    <Form form={form} name="edit_flower" onFinish={onFinish}>
+    <Form form={form}
+      name="edit_flower"
+      layout="horizontal"
+      labelCol={{ span: 6 }}
+      wrapperCol={{ span: 18 }}
+      onFinish={onFinish}>
       <Form.Item name="name" label="Flower Name" rules={[{ required: true, message: 'Please input the flower name!' }]}>
         <Input />
       </Form.Item>

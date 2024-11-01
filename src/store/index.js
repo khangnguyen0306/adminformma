@@ -5,23 +5,17 @@ import ProductReducer from "../slices/product.slice";
 import UserReducer from "../slices/user.slice";
 import { authApi } from "../services/authAPI";
 import AuthReducer from "../slices/auth.slice";
-import { orderApi } from "../services/orderApi";
-import OrderReducer from "../slices/order.slice";
 import { roleApi } from "../services/roleApi";
 import RoleReducer from "../slices/role.slice";
 import { chatApi } from "../services/chatApi";
 import ChatReducer from "../slices/chat.slice";
 import { userAPI } from "../services/userAPI";
-
-
-
-
 import { combineReducers } from "redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // Sử dụng localStorage
+import storage from "redux-persist/lib/storage"; 
 import OrderReducer from "../slices/order.slice";
-import { orderAPI } from "../services/orderApi";
+import { orderApi } from "../services/orderApi";
 const persistConfig = {
   key: "root",
   storage,
@@ -53,7 +47,7 @@ export const store = configureStore({
     role: rolePersistReducer,
     [chatApi.reducerPath]: chatApi.reducer,
     chat: chatPersistReducer,
-    [orderAPI.reducerPath]: orderAPI.reducer,
+    [orderApi.reducerPath]: orderApi.reducer,
     order: OrderPerisReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -64,7 +58,7 @@ export const store = configureStore({
       authApi.middleware,
       roleApi.middleware,
       chatApi.middleware,
-      orderAPI.middleware,
+      orderApi.middleware,
 
     ),
 });

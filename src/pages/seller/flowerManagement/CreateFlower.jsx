@@ -17,14 +17,14 @@ const CreateFlower = ({ onClose, refetch }) => {
         formData.append('price', values.price);
         formData.append('condition', values.condition);
         formData.append('description', values.description || '');
-    
+
 
         if (fileList.length > 0) {
             formData.append('file', fileList[0].originFileObj);
         }
-    
+
         try {
-            await createFlower(formData).unwrap(); 
+            await createFlower(formData).unwrap();
             message.success('Flower created successfully!');
             onClose();
             refetch();
@@ -34,14 +34,14 @@ const CreateFlower = ({ onClose, refetch }) => {
             message.error('Failed to create flower: ' + (error.data?.message || 'Unknown error'));
         }
     };
-    
+
 
     const handleUploadChange = (files) => {
         if (files.length > 0) {
             const newFileList = Array.from(files).map(file => ({
                 originFileObj: file,
                 name: file.name,
-                status: 'done', 
+                status: 'done',
             }));
             setFileList(newFileList);
         }
@@ -51,6 +51,9 @@ const CreateFlower = ({ onClose, refetch }) => {
 
     return (
         <Form
+            layout="horizontal"
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
             name="create_flower"
             form={form}
             onFinish={onFinish}
