@@ -22,6 +22,8 @@ const CustomHeader = () => {
     const navigate = useNavigate();
     const token = useSelector(selectCurrentToken)
     const dispatch = useDispatch();
+    const user = useSelector(selectCurrentUser)
+    
 
 
     const toggleCartModal = useCallback(() => {
@@ -41,12 +43,12 @@ const CustomHeader = () => {
         <Menu>
             {token ? (
                 <>
-                    <Menu.Item key="profile">
+                    {/* <Menu.Item key="profile">
                         <Link to="/user-profile">User Profile</Link>
                     </Menu.Item>
                     <Menu.Item key="history">
                         <Link to="/user-transaction-history">Transaction History</Link>
-                    </Menu.Item>
+                    </Menu.Item> */}
                     <Menu.Item key="logout">
                         <Link onClick={handleLogout}>Log out</Link>
                     </Menu.Item>
@@ -82,7 +84,7 @@ const CustomHeader = () => {
         <Header id="header" className={visible ? "show" : "hidden"} style={{ zIndex: '1' }}>
             <Link to={"/"}>
                 <div className="header-logo">
-                    <p><span style={{ color: 'black' }}>Exchange</span> <span >Web</span></p>
+                    <p><span style={{ color: 'black' }}>Flower</span> <span >Management</span></p>
                 </div>
             </Link>
             {screens.md ? (
@@ -90,20 +92,20 @@ const CustomHeader = () => {
                     <div >
                         <Menu mode="horizontal" defaultSelectedKeys={["1"]} style={{ width: 'fit-content', backgroundColor: 'none' }}>
                             <Menu.Item key="1">
-                                <Link to="/">Home</Link>
+                            <Link to={user ? (user.user.roleName === "Seller" ? "/seller" : user.user.roleName === "Admin" ? "/admin" : "/") : "/"}>Home</Link>
                             </Menu.Item>
-                            <SubMenu key="2" title="Pages">
+                            {/* <SubMenu key="2" title="Pages">
                                 <Menu.Item key="2-1">
                                     <Link to="/destination">Destination</Link>
                                 </Menu.Item>
                                 <Menu.Item key="2-2">
                                     <Link to="/about">About Us</Link>
                                 </Menu.Item>
-                            </SubMenu>
+                            </SubMenu> */}
                             <Menu.Item key="3">
-                                <Link to="/product">Product</Link>
+                                <Link to={user ? (user.user.roleName === "Seller" ? "/seller/order" : user.user.roleName === "Admin" ? "/admin/order" : "/") : "/"}>Order</Link>
                             </Menu.Item>
-                            <Menu.Item key="4">
+                            {/* <Menu.Item key="4">
                                 <Link to="/">Exchange Product</Link>
                             </Menu.Item>
                             <Menu.Item key="5">
@@ -111,17 +113,17 @@ const CustomHeader = () => {
                             </Menu.Item>
                             <Menu.Item key="6">
                                 <Link to="admin">Blog</Link>
-                            </Menu.Item>
+                            </Menu.Item> */}
                         </Menu>
 
                     </div>
                     {/* //nun-function */}
                     <div className="icon-header">
-                        <p className="cart-icon" onClick={toggleCartModal}>
+                        {/* <p className="cart-icon" onClick={toggleCartModal}>
                             <Badge count={totalProducts}>
                                 <ShoppingCartOutlined style={{ fontSize: '30px' }} />
                             </Badge>
-                        </p>
+                        </p> */}
                         <Dropdown overlay={menu} trigger={['hover']}>
                             <Avatar style={{ marginRight: '1rem', display: 'block' }} size="large" icon={<UserOutlined />} />
                         </Dropdown>
@@ -152,20 +154,20 @@ const CustomHeader = () => {
                     onClick={() => setDrawerVisible(false)}
                 >
                     <Menu.Item key="1">
-                        <Link to="/">Home</Link>
+                    <Link to={user ? (user.user.roleName === "Seller" ? "/seller" : user.user.roleName === "Admin" ? "/admin" : "/") : "/"}>Order</Link>
                     </Menu.Item>
-                    <SubMenu key="2" title="Pages">
+                    {/* <SubMenu key="2" title="Pages">
                         <Menu.Item key="2-1">
                             <Link to="/destination">Destination</Link>
                         </Menu.Item>
                         <Menu.Item key="2-2">
                             <Link to="/about">About Us</Link>
                         </Menu.Item>
-                    </SubMenu>
+                    </SubMenu> */}
                     <Menu.Item key="3">
-                        <Link to="admin">Tour List</Link>
+                        <Link to="/seller/order">Order</Link>
                     </Menu.Item>
-                    <Menu.Item key="4">
+                    {/* <Menu.Item key="4">
                         <Link to="/"> Room List </Link>
                     </Menu.Item>
                     <Menu.Item key="5">
@@ -173,13 +175,13 @@ const CustomHeader = () => {
                     </Menu.Item>
                     <Menu.Item key="6">
                         <Link to="admin">Blog</Link>
-                    </Menu.Item>
+                    </Menu.Item> */}
                 </Menu>
             </Drawer>
-            <CartModal
+            {/* <CartModal
                 visible={cartVisible}
                 onClose={toggleCartModal}
-            />
+            /> */}
         </Header>
     );
 };

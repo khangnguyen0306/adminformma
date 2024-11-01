@@ -1,127 +1,44 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { USER_API } from "../config";
-// import { selectToken } from "../slices/auth.slice";
+import { BE_API_LOCAL } from "../config";
+import { selectTokens } from "../slices/auth.slice";
 
 // Define a service using a base URL and expected endpoints
 export const userAPI = createApi({
     reducerPath: "userManagement",
-    // Tag types are used for caching and invalidation.
     tagTypes: ["UserList"],
     baseQuery: fetchBaseQuery({
-        baseUrl: USER_API,
-
-        // prepareHeaders: (headers, { getState }) => {
-        //   const token = selectToken(getState()); // Retrieve token from Redux state using selectToken selector
-        //   if (token) {
-        //     headers.append("Authorization", `Bearer ${token}`);
-        //   }
-        //   headers.append("Content-Type", "application/json");
-        //   return headers;
-        // },
-
+        baseUrl: BE_API_LOCAL,
+        prepareHeaders: (headers, { getState }) => {
+            const token = selectTokens(getState());
+            if (token) {
+                headers.append("Authorization", `Bearer ${token}`);
+            }
+            headers.append("Content-Type", "application/json");
+            return headers;
+        },
     }),
-    // baseQuery: fetchBaseQuery({ baseUrl: CLASS_API_URL }),
     endpoints: (builder) => ({
-        // Supply generics for the return type (in this case `FlowerApiResponse`)
-        // and the expected query argument. If there is no argument, use `void`
-        // for the argument type instead.
-        // getAllProduct: builder.query({
-        //     query: () => `products`,
-        //     // `providesTags` determines which 'tag' is attached to the
-        //     // cached data returned by the query.
-        //     providesTags: (result) =>
-        //         result
-        //             ? result.map(({ id }) => ({ type: "UserList", id }))
-        //             : [{ type: "UserList", id: "LIST" }],
-        // }),
+        // Fetch all users
+        getAllUser: builder.query({
+            query: () => `users`,
+            providesTags: (result) =>
+                result
+                    ? result.map(({ id }) => ({ type: "UserList", id }))
+                    : [{ type: "UserList", id: "LIST" }],
+        }),
+        // Fetch a single user's profile by ID
         getUserProfile: builder.query({
             query: (userId) => ({
-                url: `user/${userId}`, // Use template literal for security
+                url: `user/${userId}`,
                 method: "GET",
             }),
-        }),
-        // getAllCategories: builder.query({
-        //     query: () => `categories`,
-        //     // `providesTags` determines which 'tag' is attached to the
-        //     // cached data returned by the query.
-        //     providesTags: (result) =>
-        //         result
-        //             ? result.map(({ id }) => ({ type: "CategoriesList", id }))
-        //             : [{ type: "CategoriesList", id: "LIST" }],
-        // }),
-
-        // getClassById: builder.query({
-        //   query: (classId) => ({
-        //     url: `viewclass/${classId}`, // Use template literal for security
-        //     method: "GET",
-        //   }),
-        //   providesTags: (result) => {
-        //     if (Array.isArray(result)) {
-        //       // Handle array case (multiple classes)
-        //       return result.map(({ id }) => ({ type: "ClassList", id }));
-        //     } else if (result && result.id) {
-        //       // Handle object case (single class)
-        //       return [{ type: "ClassList", id: result.id }];
-        //     } else {
-        //       // Handle no data case (optional)
-        //       return [];
-        //     }
-        //   },
-        // }),
-
-        // duplicateClass: builder.mutation({
-        //   query: (body) => {
-        //     return {
-        //       method: "POST",
-        //       url: `viewclass`,
-        //       body,
-        //     };
-        //   },
-        //   invalidatesTags: [{ type: "ClassList", id: "LIST" }],
-        // }),
-
-        // createClass: builder.mutation({
-        //   query: (body) => {
-        //     return {
-        //       method: "POST",
-        //       url: `class/create`,
-        //       body,
-        //     };
-        //   },
-        //   invalidatesTags: [{ type: "ClassList", id: "LIST" }],
-        // }),
-
-        // editClass: builder.mutation({
-        //   query: (payload) => {
-        //     return {
-        //       method: "PUT",
-        //       url: `viewclass/` + payload.id,
-        //       body: payload.body,
-        //     };
-        //   },
-        //   invalidatesTags: (res, err, arg) => [{ type: "ClassList", id: arg.id }],
-        // }),
-        // deleteClass: builder.mutation({
-        //   query: (payload) => {
-        //     return {
-        //       method: "DELETE",
-        //       url: `viewclass/` + payload.id,
-        //     };
-        //   },
-        //   invalidatesTags: (_res, _err, _arg) => [
-        //     { type: "ClassList", id: "LIST" },
-        //   ],
-        // }),
+            providesTags: (result, error, userId) => [{ type: "UserList", id: userId }],
+        })
     }),
 });
 
-// Export hooks for usage in functional components, which are
-// auto-generated based on the defined endpoints
-// Hooks are auto-generated by RTK-Query
+// Export hooks generated by the endpoints
 export const {
+    useGetAllUserQuery,
     useGetUserProfileQuery
-    // useGetAllProductQuery,
-    // useGetAllCategoriesQuery,
-    // useGetProductDetailQuery
- 
 } = userAPI;
