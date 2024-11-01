@@ -155,7 +155,7 @@ const OrderManager = () => {
             dataIndex: 'status',
             key: 'status',
             render: (status) => (
-                <Tag color={status === 'Đang xử lý' ? 'blue' : status === 'Hoàn thành' ? 'green' : 'red'}>
+                <Tag color={status === 'Đang xử lý' ? 'blue' : status === 'Đã giao' ? 'green' : 'red'}>
                     {status}
                 </Tag>
             ),
@@ -189,9 +189,13 @@ const OrderManager = () => {
     return (
         <>
             <div className="flex flex-col items-start w-full mt-[100px]">
-                <p className="font-bold text-center w-full text-4xl mb-9 mt-3 bg-custom-gradient bg-clip-text text-transparent">
-                    Order Management
-                </p>
+            <p className="font-bold text-center w-full text-4xl mb-9 mt-3 bg-custom-gradient bg-clip-text text-transparent"
+                style={{
+                    textShadow: '2px 4px 8px rgba(0, 0, 0, 0.2)',
+                }}
+            >
+              Order Management
+            </p>
                 <div className='flex w-full justify-end mb-5'>
                     <Button type="primary" onClick={handleOpenCreateModal}
                         className="bg-gradient-to-r from-blue-500 h-[40px] to-cyan-400 text-white font-medium rounded-full  transition-transform duration-800 hover:from-cyan-400 hover:to-blue-500 hover:scale-105 hover:shadow-cyan-200 hover:shadow-lg">
