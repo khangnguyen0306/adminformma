@@ -17,5 +17,5 @@ const userSlice = createSlice({
     },
 });
 
-export const { setFlower, clearFlower } = userSlice.actions;
+export const { setUser, clearUser } = userSlice.actions;
 export default userSlice.reducer;

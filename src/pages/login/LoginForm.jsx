@@ -36,14 +36,22 @@ const LoginForm = () => {
   const handleLoginSuccess = (data) => {
     console.log(data)
     if (data.user.roleName == "Seller") {
+      sessionStorage.setItem("userId",data.user._id)
       setTimeout(() => {
         navigate('/seller');
       }, 100)
     } else if (data.user.roleName == "Admin") {
+      sessionStorage.setItem("userId",data.user._id)
       setTimeout(() => {
         navigate('/admin');
       }, 100)
-    } else {
+    }else if (data.user.roleName == "Buyer") {
+      sessionStorage.setItem("userId",data.user._id)
+      setTimeout(() => {
+        navigate('/buyer/home');
+      }, 100)
+    }
+     else {
       navigate('/404');
     }
 

@@ -3,6 +3,13 @@ import Loadable from "./Loadable";
 import MainLayout from "../layout/MainLayout";
 import AuthGuard from "./AuthGuard";
 import SellerGuard from "./SellerGuard";
+import Admin from "../pages/admin/Admin";
+import AdminLayout from "../layout/AdminLayout";
+import AdminUser from "../pages/admin/AdminUser/AdminUser";
+import AdminDashboard from "../pages/admin/AdminDashboard/AdminDashboard";
+import BuyerLayout from "../layout/BuyerLayout";
+import Buyer from "../pages/buyer/buyer";
+// import Chat from "../pages/buyer/Chat";
 const Login = Loadable({ loader: () => import("../pages/login/Login") });
 const Register = Loadable({ loader: () => import("../pages/register/Register") });
 const Home = Loadable({ loader: () => import("../pages/home/Home") });
@@ -56,28 +63,51 @@ export const router = createBrowserRouter([
     ],
   },
 
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      {
+        path:"/admin/order",
+        element: <Admin />,
+      },
+      {
+        path:"/admin/user",
+        element: <AdminUser />,
+      },
+      {
+        path:"/admin/dashboard",
+        element: <AdminDashboard />,
+      },
+    ],
+  },
+  {
+    path: "/buyer",
+    element: <BuyerLayout />,
+    children: [
+      {
+        path:"/buyer/home",
+        element: <Buyer />,
+      },
+      // {
+      //   path:"/buyer/chat",
+      //   element: <Chat />,
+      // },
+      // {
+      //   path:"/admin/user",
+      //   element: <AdminUser />,
+      // },
+      // {
+      //   path:"/admin/dashboard",
+      //   element: <AdminDashboard />,
+      // },
+    ],
+  },
   // {
-  //   path: "/admin",
-  //   element: <MainLayout />,
-  //   children: [
-  //     {
-  //       path: "/admin",
-  //       element: <Navigate to="/" replace />,
-  //     },
-  //     {
-  //       element: <AdminGuard />,
-  //       children: [
-  //         { index: true, element: Admin },
-  //         { index: true, path: "dashboard", element: Admin },
-  //         { path: "users", element: ManageUser },
-  //         { path: "users/user-details/:userId", element: Detail },
-  //         { path: "courses", element: ManageCourse },
-  //         { path: "money", element: Cost },
-  //         { path: "quizs", element: Quiz },
-  //         { path: "create-course", element: CreateCourse },
-  //       ],
-  //     },
-  //   ],
+  
+  //       path:"/buyer/chat",
+  //       element: <Chat />,
+
   // },
   {
     path: "*",

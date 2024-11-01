@@ -11,7 +11,7 @@ export const flowerApi = createApi({
     baseUrl: BE_API_LOCAL,
 
     prepareHeaders: (headers, { getState }) => {
-      const token = selectTokens(getState()); // Retrieve token from Redux state using selectToken selector
+      const token = selectTokens(getState()); 
       if (token) {
         headers.append("Authorization", `Bearer ${token}`);
       }
@@ -21,9 +21,7 @@ export const flowerApi = createApi({
 
 }),
   endpoints: (builder) => ({
-    // Supply generics for the return type (in this case `FlowerApiResponse`)
-    // and the expected query argument. If there is no argument, use `void`
-    // for the argument type instead.
+
     getAllFlowers: builder.query({
       query: () => `flowers`,
       // `providesTags` determines which 'tag' is attached to the

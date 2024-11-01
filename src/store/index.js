@@ -5,6 +5,12 @@ import ProductReducer from "../slices/product.slice";
 import UserReducer from "../slices/user.slice";
 import { authApi } from "../services/authAPI";
 import AuthReducer from "../slices/auth.slice";
+import { orderApi } from "../services/orderApi";
+import OrderReducer from "../slices/order.slice";
+import { roleApi } from "../services/roleApi";
+import RoleReducer from "../slices/role.slice";
+import { chatApi } from "../services/chatApi";
+import ChatReducer from "../slices/chat.slice";
 import { userAPI } from "../services/userAPI";
 
 
@@ -29,7 +35,10 @@ const persistedReducer = persistReducer(persistConfig, flowerReducer);
 const ProductPerisReducer = persistReducer(persistConfig, ProductReducer);
 const UserPerisReducer = persistReducer(persistConfig, UserReducer);
 const AuthPerisReducer = persistReducer(persistConfig, AuthReducer);
+const rolePersistReducer = persistReducer(persistConfig, RoleReducer);
+const chatPersistReducer = persistReducer(persistConfig, ChatReducer);
 const OrderPerisReducer = persistReducer(persistConfig, OrderReducer);
+
 export const store = configureStore({
   reducer: {
     [flowerApi.reducerPath]: flowerApi.reducer,
@@ -40,6 +49,10 @@ export const store = configureStore({
     user: UserPerisReducer,
     [authApi.reducerPath]: authApi.reducer,
     auth: AuthPerisReducer,
+    [roleApi.reducerPath]: roleApi.reducer,
+    role: rolePersistReducer,
+    [chatApi.reducerPath]: chatApi.reducer,
+    chat: chatPersistReducer,
     [orderAPI.reducerPath]: orderAPI.reducer,
     order: OrderPerisReducer,
   },
@@ -49,7 +62,10 @@ export const store = configureStore({
       productAPI.middleware,
       userAPI.middleware,
       authApi.middleware,
+      roleApi.middleware,
+      chatApi.middleware,
       orderAPI.middleware,
+
     ),
 });
 

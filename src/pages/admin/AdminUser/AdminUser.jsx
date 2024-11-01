@@ -1,21 +1,22 @@
 import { DeleteFilled, EditFilled, PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Form, Input, message, Modal, Space, Table, Tag, Tooltip } from "antd";
+import { Button, Form, Input, message, Modal, Space, Table, Tooltip } from "antd";
 import React, { useState } from "react";
 import Highlighter from "react-highlight-words";
-import { useDeleteOrderMutation, useEditOrderMutation, useGetAllOrderQuery } from "../../services/orderApi";
-import OrderForm from "./OrderForm";
+import { useDeleteUserMutation, useGetAllUserQuery} from "../../../services/userAPI";
+import UserForm from "./UserForm";
+// import OrderForm from "./OrderForm";
 
-const Admin = () => {
+const AdminUser = () => {
   let searchInput = null;
   const [form] = Form.useForm()
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [sortedInfo, setSortedInfo] = useState({});
-  const { data: orders, error, isLoading, refetch } = useGetAllOrderQuery();
-  const [deleteOrder, { isLoading: loadingDelete }] = useDeleteOrderMutation();
-  const [editOrder, { isLoadingOrder }] = useEditOrderMutation();
+  const { data: users, error, isLoading, refetch } = useGetAllUserQuery();
+  const [deleteUser, { isLoading: loadingDelete }] = useDeleteUserMutation();
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -25,6 +26,11 @@ const Admin = () => {
     clearFilters();
     setSearchText("");
     handleSearch("", confirm, "");
+  };
+
+  const handleEditUser = (user) => {
+    setSelectedUser(user);
+    setIsModalVisible(true);
   };
 
   const getColumnSearchProps = (dataIndex) => ({
@@ -95,144 +101,72 @@ const Admin = () => {
       ),
   });
   const handleOpenCreateModal = () => {
-    setSelectedOrder(null);
+    setSelectedUser(null);
     setIsModalVisible(true);
   };
   const handleCloseModal = () => {
     setIsModalVisible(false);
-    setSelectedOrder(null);
+    setSelectedUser(null);
     form.resetFields()
 };
-const handleEditOrder = (flower) => {
-  setSelectedOrder(flower);
-  setIsModalVisible(true);
-};
 
-const confirmChangeOrder = (order) => {
-  Modal.confirm({
-    title: 'Xác nhận chuyển sang đã xác nhận',
-    content: 'Bạn có chắc chắn muốn chuyển order này sang đã xác nhận?',
-    okText: 'Chuyển',
-    okType: 'primary',
-    cancelText: 'Hủy',
-    onOk: async () => {
-        try {
-            const id = order._id
-            const body = {
-              quantity : order.quantity,
-              status: "Đã xác nhận"
-            }
-            await editOrder({id, body}).unwrap();
-            message.success('Xác nhận thành công');
-            refetch();
-        } catch (error) {
-            message.error('Xác nhận thất bại');
-        }
-    },
-});
-}
-
-const confirmDeleteOrder = (order) => {
+const confirmDeleteUser = (user) => {
   Modal.confirm({
       title: 'Xác nhận xóa',
-      content: 'Bạn có chắc chắn muốn xóa order này?',
+      content: 'Bạn có chắc chắn muốn xóa user này?',
       okText: 'Xóa',
       okType: 'danger',
       cancelText: 'Hủy',
       onOk: async () => {
           try {
-              await deleteOrder(order._id).unwrap();
-              message.success('Xóa order thành công');
+              await deleteUser(user._id).unwrap();
+              message.success('Xóa user thành công');
               refetch();
           } catch (error) {
-              message.error('Xóa order thất bại');
+              message.error('Xóa user thất bại');
           }
       },
   });
 };
 
-  const filteredOrders = orders?.filter(orders => !orders.isDeleted);
+  const filteredUsers = users?.filter(users => !users.isDeleted);
 
 
   const columns = [
     {
-      title: "Order ID",
+      title: "User ID",
       dataIndex: "_id",
       key: "_id",
       ...getColumnSearchProps("_id"),
     },
     {
-      title: "Buyer Name",
-      dataIndex: ["buyerId", "name"], 
-      key: "buyerName",
-      ...getColumnSearchProps(["buyerId", "name"]),
-      sorter: (a, b) => a.buyerId.name.localeCompare(b.buyerId.name),
-      sortOrder: sortedInfo.columnKey === "buyerName" && sortedInfo.order,
+      title: "User Name",
+      dataIndex:"name", 
+      key: "name",
+      ...getColumnSearchProps("name"),
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      sortOrder: sortedInfo.columnKey === "name" && sortedInfo.order,
     },
     {
-      title: "Buyer's Email",
-      dataIndex: ["buyerId", "email"], 
-      key: "buyerEmail",
-      ...getColumnSearchProps(["buyerId", "email"]),
-      sorter: (a, b) => a.buyerId.email.localeCompare(b.buyerId.email),
+      title: "User's Email",
+      dataIndex: "email", 
+      key: "email",
+      ...getColumnSearchProps("email"),
+      sorter: (a, b) => a.email.localeCompare(b.email),
       sortOrder: sortedInfo.columnKey === "buyerEmail" && sortedInfo.order,
     },
     {
-      title: "Flower's ID",
-      dataIndex: ["flowerId", "_id"], 
-      key: "flowerId",
-      ...getColumnSearchProps("_id"),
+      title: "User's address",
+      dataIndex: "address", 
+      key: "address",
+      ...getColumnSearchProps("address"),
     },
     {
-      title: "Flower's Name",
-      dataIndex: ["flowerId", "name"], 
-      key: "flowerName",
-      ...getColumnSearchProps(["flowerId", "name"]),
-      sorter: (a, b) => a.flowerId.name.localeCompare(b.flowerId.name),
-      sortOrder: sortedInfo.columnKey === "flowerName" && sortedInfo.order,
-    },
-    {
-      title: "Flower's Type",
-      dataIndex: ["flowerId", "type"], 
-      key: "type",
-      ...getColumnSearchProps(["flowerId", "type"]),
-      sorter: (a, b) => a.quantity - b.quantity,
-      sortOrder: sortedInfo.columnKey === 'type' && sortedInfo.order,
-    },
-    {
-      title: "Quantity",
-      dataIndex:"quantity", 
-      key: "quantity",
-      ...getColumnSearchProps("quantity"),
-      sorter: (a, b) => a.quantity - b.quantity,
-      sortOrder: sortedInfo.columnKey === 'quantity' && sortedInfo.order,
-    },
-    {
-      title: "Status",
-      dataIndex:"status", 
-      key: "status",
-      ...getColumnSearchProps("status"),
-      sorter: (a, b) => a.status - b.status,
-      sortOrder: sortedInfo.columnKey === 'status' && sortedInfo.order,
-      render:(record) =>{
-        return <Tag color={record === "Đang xử lý" ? "" : record === "Đang giao" ? "yellow" : record === "Đã xác nhận" ? "orangered" : "green"}>{record}</Tag>
-      }
-    },
-    {
-      title: "",
-      key: "statusAction",
-      render: (_, record) => (
-        <Space>
-          <Tooltip title="Chuyển trạng thái" color="#ffde21">
-            <Button
-              type="primary"
-              style={{background:"#ffde21"}}
-              onClick={() => confirmChangeOrder(record)}
-            >Chuyển</Button>
-          </Tooltip>
-        </Space>
-      ),
-    },
+        title: "User's Number",
+        dataIndex: "phoneNumber", 
+        key: "phoneNumber",
+        ...getColumnSearchProps("phoneNumber"),
+      },
     {
       title: "Hành động",
       key: "action",
@@ -242,7 +176,7 @@ const confirmDeleteOrder = (order) => {
             <Button
               type="primary"
               icon={<EditFilled />}
-              onClick={() => handleEditOrder(record)}
+              onClick={() => handleEditUser(record)}
             />
           </Tooltip>
           <Tooltip title="Xóa" color="red">
@@ -250,7 +184,7 @@ const confirmDeleteOrder = (order) => {
               type="primary"
               danger
               icon={<DeleteFilled />}
-              onClick={() => confirmDeleteOrder(record)}
+              onClick={() => confirmDeleteUser(record)}
             />
           </Tooltip>
         </Space>
@@ -258,7 +192,6 @@ const confirmDeleteOrder = (order) => {
     },
   ];
 
-  console.log(orders)
 
   return (
     <div className="flex flex-col items-start w-full">
@@ -270,24 +203,24 @@ const confirmDeleteOrder = (order) => {
           className="bg-gradient-to-r from-blue-500 h-[40px] to-cyan-400 text-white font-medium rounded-full  transition-transform duration-800 hover:from-cyan-400 hover:to-blue-500 hover:scale-105 hover:shadow-cyan-200 hover:shadow-lg flex items-center"
         >
           <p>
-            <PlusOutlined /> Thêm order mới
+            <PlusOutlined /> Thêm user mới
           </p>
         </Button>
       </div>
       <Table className="w-full" 
         columns={columns}
-        dataSource={filteredOrders}
+        dataSource={filteredUsers}
       />
       <Modal
-                title={<p className='w-full text-center mb-7'>{selectedOrder? 'Chỉnh sửa order' : 'Tạo order mới'}</p>}
+                title={<p className='w-full text-center mb-7'>{selectedUser? 'Chỉnh sửa user' : 'Tạo user mới'}</p>}
                 open={isModalVisible}
                 onCancel={handleCloseModal}
                 footer={null}
             >
-                <OrderForm  handleCloseModal={handleCloseModal} selectedOrder={selectedOrder} form={form}/> 
+                <UserForm  handleCloseModal={handleCloseModal} form={form} selectedUser={selectedUser}/> 
             </Modal>
     </div>
   );
 };
 
-export default Admin;
+export default AdminUser;
