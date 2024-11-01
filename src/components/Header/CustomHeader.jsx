@@ -23,12 +23,7 @@ const CustomHeader = () => {
     const token = useSelector(selectCurrentToken)
     const dispatch = useDispatch();
     const user = useSelector(selectCurrentUser)
-    
 
-
-    const toggleCartModal = useCallback(() => {
-        setCartVisible(prev => !prev);
-    }, []);
 
     const handleLogout = useCallback(() => {
         dispatch(logOut());
@@ -43,12 +38,6 @@ const CustomHeader = () => {
         <Menu>
             {token ? (
                 <>
-                    {/* <Menu.Item key="profile">
-                        <Link to="/user-profile">User Profile</Link>
-                    </Menu.Item>
-                    <Menu.Item key="history">
-                        <Link to="/user-transaction-history">Transaction History</Link>
-                    </Menu.Item> */}
                     <Menu.Item key="logout">
                         <Link onClick={handleLogout}>Log out</Link>
                     </Menu.Item>
@@ -92,48 +81,21 @@ const CustomHeader = () => {
                     <div >
                         <Menu mode="horizontal" defaultSelectedKeys={["1"]} style={{ width: 'fit-content', backgroundColor: 'none' }}>
                             <Menu.Item key="1">
-                            <Link to={user ? (user.user.roleName === "Seller" ? "/seller" : user.user.roleName === "Admin" ? "/admin" : "/") : "/"}>Home</Link>
+                                <Link to={user ? (user.user.roleName === "Seller" ? "/seller" : user.user.roleName === "Admin" ? "/admin" : "/") : "/"}>Home</Link>
                             </Menu.Item>
-                            {/* <SubMenu key="2" title="Pages">
-                                <Menu.Item key="2-1">
-                                    <Link to="/destination">Destination</Link>
-                                </Menu.Item>
-                                <Menu.Item key="2-2">
-                                    <Link to="/about">About Us</Link>
-                                </Menu.Item>
-                            </SubMenu> */}
                             <Menu.Item key="3">
                                 <Link to={user ? (user.user.roleName === "Seller" ? "/seller/order" : user.user.roleName === "Admin" ? "/admin/order" : "/") : "/"}>Order</Link>
                             </Menu.Item>
-                            {/* <Menu.Item key="4">
-                                <Link to="/">Exchange Product</Link>
-                            </Menu.Item>
-                            <Menu.Item key="5">
-                                <Link to="home">Tour Search</Link>
-                            </Menu.Item>
-                            <Menu.Item key="6">
-                                <Link to="admin">Blog</Link>
-                            </Menu.Item> */}
                         </Menu>
 
                     </div>
-                    {/* //nun-function */}
+                   
                     <div className="icon-header">
-                        {/* <p className="cart-icon" onClick={toggleCartModal}>
-                            <Badge count={totalProducts}>
-                                <ShoppingCartOutlined style={{ fontSize: '30px' }} />
-                            </Badge>
-                        </p> */}
                         <Dropdown overlay={menu} trigger={['hover']}>
                             <Avatar style={{ marginRight: '1rem', display: 'block' }} size="large" icon={<UserOutlined />} />
                         </Dropdown>
 
                     </div>
-                    {/* <div className="btn-login">
-                        <Link to={"/login"}>
-                            <Button type="primary" className="login-btn"><p>Login</p></Button>
-                        </Link>
-                    </div> */}
                 </>
             ) : (
                 <Button className="menu-btn" onClick={() => setDrawerVisible(true)} style={{ marginRight: '40px' }}>
@@ -154,34 +116,13 @@ const CustomHeader = () => {
                     onClick={() => setDrawerVisible(false)}
                 >
                     <Menu.Item key="1">
-                    <Link to={user ? (user.user.roleName === "Seller" ? "/seller" : user.user.roleName === "Admin" ? "/admin" : "/") : "/"}>Order</Link>
+                        <Link to={user ? (user.user.roleName === "Seller" ? "/seller" : user.user.roleName === "Admin" ? "/admin" : "/") : "/"}>Order</Link>
                     </Menu.Item>
-                    {/* <SubMenu key="2" title="Pages">
-                        <Menu.Item key="2-1">
-                            <Link to="/destination">Destination</Link>
-                        </Menu.Item>
-                        <Menu.Item key="2-2">
-                            <Link to="/about">About Us</Link>
-                        </Menu.Item>
-                    </SubMenu> */}
                     <Menu.Item key="3">
                         <Link to="/seller/order">Order</Link>
                     </Menu.Item>
-                    {/* <Menu.Item key="4">
-                        <Link to="/"> Room List </Link>
-                    </Menu.Item>
-                    <Menu.Item key="5">
-                        <Link to="home">Tour Search</Link>
-                    </Menu.Item>
-                    <Menu.Item key="6">
-                        <Link to="admin">Blog</Link>
-                    </Menu.Item> */}
                 </Menu>
             </Drawer>
-            {/* <CartModal
-                visible={cartVisible}
-                onClose={toggleCartModal}
-            /> */}
         </Header>
     );
 };

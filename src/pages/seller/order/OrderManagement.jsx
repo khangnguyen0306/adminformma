@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import { render } from 'react-dom';
 import { Link } from 'react-router-dom';
 import CreateOrder from './CreateOrder';
-import { useDeleteOrderMutation, useGetAllOrdersQuery } from '../../../services/orderApi';
+import { useDeleteOrderMutation, useGetAllOrderQuery } from '../../../services/orderApi';
 import EditOrder from './EditOrder';
 
 const OrderManager = () => {
@@ -17,7 +17,7 @@ const OrderManager = () => {
     const [isEditModal, setIsEditModal] = useState(false)
     const [idForEdit, setIdForEdit] = useState(null)
     // Fetch orders using the custom API hook
-    const { data: orders, error, isLoading, refetch } = useGetAllOrdersQuery();
+    const { data: orders, error, isLoading, refetch } = useGetAllOrderQuery();
     const [deleteOrder] = useDeleteOrderMutation();
 
 

@@ -2,13 +2,14 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, Tag, Divider, Spin, Row, Col, Typography, Image } from 'antd';
 import dayjs from 'dayjs';
-import { useGetOrderDetailsQuery } from '../../../services/orderApi';
+import { useGetOrderDetailQuery } from '../../../services/orderApi';
+
 
 const { Title, Text } = Typography;
 
 const OrderDetail = () => {
     const { orderId } = useParams();
-    const { data: orderDetail, isLoading } = useGetOrderDetailsQuery(orderId);
+    const { data: orderDetail, isLoading } = useGetOrderDetailQuery(orderId)
 
     if (isLoading) return <Spin tip="Loading Order Details..." className="flex justify-center items-center h-screen" />;
 

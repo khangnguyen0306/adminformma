@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Form, InputNumber, Select, Button, message, Skeleton } from 'antd';
-import { useEditOrderMutation, useGetOrderDetailsQuery } from '../../../services/orderApi';
+import { useEditOrderMutation, useGetOrderDetailQuery } from '../../../services/orderApi';
 
 const EditOrder = ({ orderId, onClose, refetch }) => {
-    const { data: order, isLoading: isLoadingOrder } = useGetOrderDetailsQuery(orderId);
+    const { data: order, isLoading: isLoadingOrder } = useGetOrderDetailQuery(orderId);
     const [form] = Form.useForm();
     const [updateOrder, { isLoading: isUpdating }] = useEditOrderMutation();
     const [maxQuantity, setMaxQuantity] = useState(null);
