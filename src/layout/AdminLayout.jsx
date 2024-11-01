@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   BookOutlined,
   DashboardOutlined,
@@ -7,27 +7,38 @@ import {
   MenuUnfoldOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Avatar, Button, Dropdown, Layout, Menu, theme } from "antd";
+import { Avatar, Button, Dropdown, Layout, Menu, notification, theme } from "antd";
 import { Outlet, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logOut } from "../slices/auth.slice";
 const { Header, Sider, Content } = Layout;
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
-
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const handleMenuClick = ({ key }) => {
     navigate(key);
   };
-  const menu =  (
+
+  const handleLogout = useCallback(() => {
+    dispatch(logOut());
+    notification.success({
+      message: "Logout successfully",
+      description: "See you again!",
+    });
+    navigate("/login");
+  }, [dispatch, navigate]);
+  const menu = (
     <Menu>
 
-            <>
-                <Menu.Item key="profile">
-                    <Link to="/user-profile">Forget Password</Link>
-                </Menu.Item>
-              
-            </>
-   
+      <>
+        <Menu.Item key="profile">
+          <p className="text-sm"  onClick={handleLogout}>Logout</p>
+        </Menu.Item>
+
+      </>
+
     </Menu>
   )
   return (
@@ -48,7 +59,7 @@ const AdminLayout = () => {
             borderBottom: "1px solid #ddd",
           }}
         >
-          <p style={{  fontSize: "40px" }}>FLOWERS</p>
+          <p style={{ fontSize: "40px" }}>FLOWERS</p>
         </div>
         <Menu
           mode="inline"
@@ -78,7 +89,7 @@ const AdminLayout = () => {
         <Header
           style={{
             padding: 0,
-            background: "#F5F5F5",  
+            background: "#F5F5F5",
             color: "gray",
             display: "flex",
             justifyContent: "space-between",
@@ -95,9 +106,9 @@ const AdminLayout = () => {
               color: "gray",
             }}
           />
-           <Dropdown overlay={menu} trigger={['hover']}>
-                            <Avatar style={{ marginRight: '1rem', display: 'block' }} size="large" icon={<UserOutlined />} />
-                        </Dropdown>
+          <Dropdown overlay={menu} trigger={['hover']}>
+            <Avatar style={{ marginRight: '1rem', display: 'block' }} size="large" icon={<UserOutlined />} />
+          </Dropdown>
         </Header>
         <Content
           style={{
@@ -108,7 +119,7 @@ const AdminLayout = () => {
             height: "100vh",
             padding: "0px 24px",
             background: "#F5F5F5",
-           
+
           }}
         >
           <div>

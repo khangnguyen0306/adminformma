@@ -113,7 +113,7 @@ console.log(flowers)
                             className="w-[300px] h-[400px] object-cover rounded-md mb-4" 
                         />
                         <p className="font-medium text-lg">{flower.name}</p>
-                        <p className="text-gray-600 font-light">FROM ${flower.price}</p>
+                        <p className="text-gray-600  font-bold"> {flower.price} VND</p>
                         <Button onClick={()=>{createChatRoom(flower?.sellerId?._id)}} size='large' style={{ width: "100%" }}>Liên hệ</Button>
                     </div>
                 ))}

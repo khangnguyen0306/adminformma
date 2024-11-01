@@ -34,6 +34,35 @@ export const userAPI = createApi({
             }),
             providesTags: (result, error, userId) => [{ type: "UserList", id: userId }],
         }),
+        createUser: builder.mutation({
+            query: (body) => {
+                return {
+                    method: "POST",
+                    url: `users`,
+                    body,
+                };
+            },
+            invalidatesTags: [{ type: "user", id: "LIST" }],
+        }),
+        editUser: builder.mutation({
+            query: (payload) => {
+                return {
+                    method: "PATCH",
+                    url: `users/` + payload.id,
+                    body: payload.body,
+                };
+            },
+            invalidatesTags: (res, err, arg) => [{ type: "user", id: arg.id }],
+        }),
+
+        deleteUser: builder.mutation({
+            query: (payload) => ({
+                method: "DELETE",
+                url: `users/` + payload,
+            }),
+            invalidatesTags: [{ type: "UserList", id: "LIST" }],
+        }),
+
     }),
 });
 
@@ -41,4 +70,7 @@ export const userAPI = createApi({
 export const {
     useGetAllUserQuery,
     useGetUserProfileQuery,
+    useCreateUserMutation,
+    useEditUserMutation,
+    useDeleteUserMutation,
 } = userAPI;

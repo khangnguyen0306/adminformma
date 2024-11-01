@@ -42,7 +42,7 @@ const BuyerHeader = () => {
             {token ? (
                 <>
                     <Menu.Item key="profile">
-                        <Link to="/user-profile">Forget Password</Link>
+                    <p className="text-sm"  onClick={handleLogout}>Logout</p>
                     </Menu.Item>
                   
                 </>
@@ -88,11 +88,11 @@ const BuyerHeader = () => {
                     </div>
                     {/* //nun-function */}
                     <div className="icon-header">
-                        <p className="cart-icon" onClick={toggleCartModal}>
+                        {/* <p className="cart-icon" onClick={toggleCartModal}>
                             <Badge count={totalProducts}>
                                 <ShoppingCartOutlined style={{ fontSize: '30px' }} />
                             </Badge>
-                        </p>
+                        </p> */}
                         <Dropdown overlay={menu} trigger={['hover']}>
                             <Avatar style={{ marginRight: '1rem', display: 'block' }} size="large" icon={<UserOutlined />} />
                         </Dropdown>
@@ -118,10 +118,10 @@ const BuyerHeader = () => {
             >
               
             </Drawer>
-            <CartModal
+            {/* <CartModal
                 visible={cartVisible}
                 onClose={toggleCartModal}
-            />
+            /> */}
         </Header>
     );
 };

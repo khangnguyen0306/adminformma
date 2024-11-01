@@ -3,7 +3,7 @@ import { Button, Form, Input, message, Modal, Space, Table, Tooltip } from "antd
 import React, { useState } from "react";
 import Highlighter from "react-highlight-words";
 import UserForm from "./UserForm";
-import { useGetAllUserQuery } from "../../../services/userAPI";
+import { useDeleteUserMutation, useGetAllUserQuery } from "../../../services/userAPI";
 // import OrderForm from "./OrderForm";
 
 const AdminUser = () => {
@@ -15,7 +15,7 @@ const AdminUser = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [sortedInfo, setSortedInfo] = useState({});
   const { data: users, error, isLoading, refetch } = useGetAllUserQuery();
-  // const [deleteUser, { isLoading: loadingDelete }] = useDeleteUserMutation();
+  const [deleteUser, { isLoading: loadingDelete }] = useDeleteUserMutation();
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -119,7 +119,7 @@ const confirmDeleteUser = (user) => {
       cancelText: 'Hủy',
       onOk: async () => {
           try {
-              // await deleteUser(user._id).unwrap();
+              await deleteUser(user._id).unwrap();
               message.success('Xóa user thành công');
               refetch();
           } catch (error) {

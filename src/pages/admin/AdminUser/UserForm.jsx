@@ -1,6 +1,8 @@
 import { Button, Form, Input, InputNumber, message, Select } from "antd";
 import React, { useEffect, useState } from "react";
 import {
+  useCreateUserMutation,
+  useEditUserMutation,
   // useCreateUserMutation,
   useGetAllUserQuery,
   // useEditUserMutation,
@@ -10,8 +12,8 @@ import { useGetAllRoleQuery } from "../../../services/roleApi";
 
 const UserForm = ({ handleCloseModal, form, selectedUser }) => {
   const [maxQuantity, setMaxQuantity] = useState(null);
-  // const [createOrder, { isLoading: loadingCreate }] = useCreateUserMutation();
-  // const [editUser, { isLoading: loadingEdit }] = useEditUserMutation();
+  const [createOrder, { isLoading: loadingCreate }] = useCreateUserMutation();
+  const [editUser, { isLoading: loadingEdit }] = useEditUserMutation();
   const { data: users, error, isLoading, refetch } = useGetAllUserQuery();
   const {
     data: roles,
@@ -26,7 +28,7 @@ const UserForm = ({ handleCloseModal, form, selectedUser }) => {
 
   const handleCreateUser = async (values) => {
     try {
-      // await createOrder(values).unwrap();
+      await createOrder(values).unwrap();
       message.success("Flower created successfully!");
       refetch();
       handleCloseModal();
@@ -41,16 +43,16 @@ const UserForm = ({ handleCloseModal, form, selectedUser }) => {
 
   const handleEditUser = async (values) => {
     try {
-      // await editUser({
-      //   id: selectedUser._id,
-      //   body: { ...values },
-      // })
-      //   .unwrap()
-      //   .then(() => {
-      //     message.success("User updated successfully!");
-      //     handleCloseModal();
-      //     refetch();
-      //   });
+      await editUser({
+        id: selectedUser._id,
+        body: { ...values },
+      })
+        .unwrap()
+        .then(() => {
+          message.success("User updated successfully!");
+          handleCloseModal();
+          refetch();
+        });
     } catch (error) {
       message.error(
         "Failed to create user: " +
