@@ -4,18 +4,19 @@ const initialState = {
   order: null,
 };
 
-const orderSlice = createSlice({
-  name: "order",
+const OderSlice = createSlice({
+  name: "Oder",
   initialState,
   reducers: {
-    setOrder: (state, action) => {
+    setOder: (state, action) => {
       state.user = action.payload;
     },
-    clearOrder: (state) => {
+    clearOder: (state) => {
       state.user = null;
     },
   },
 });
 
-export const { setOrder, clearOrder } = orderSlice.actions;
-export default orderSlice.reducer;
+export const { setOder, clearOder } = OderSlice.actions;
+export default OderSlice.reducer;
+

@@ -15,7 +15,7 @@ export const flowerApi = createApi({
       if (token) {
         headers.append("Authorization", `Bearer ${token}`);
       }
-      headers.append("Content-Type", "application/json");
+    
       return headers;
     },
 
