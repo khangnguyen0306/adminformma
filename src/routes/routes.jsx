@@ -16,6 +16,12 @@ const Dashboard = Loadable({
 const Seller = Loadable({
   loader: () => import("../pages/seller/flowerManagement/FlowerManager"),
 });
+const Order = Loadable({
+  loader: () => import("../pages/seller/order/OrderManagement"),
+});
+const OrderDetail = Loadable({
+  loader: () => import("../pages/seller/order/OrderDetail"),
+});
 
 
 export const router = createBrowserRouter([
@@ -39,8 +45,8 @@ export const router = createBrowserRouter([
         element: <SellerGuard />,
         children: [
           { index: true, element: Seller },
-          // { path: "users", element: ManageUser },
-          // { path: "users/user-details/:userId", element: Detail },
+          { path: "order", element: Order },
+          { path: "order/detail/:orderId", element: OrderDetail },
           // { path: "courses", element: ManageCourse },
           // { path: "money", element: Cost },
           // { path: "quizs", element: Quiz },

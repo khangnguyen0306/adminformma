@@ -9,6 +9,7 @@ import Highlighter from 'react-highlight-words';
 import { useCreateflowerMutation, useDeleteFlowerMutation, useGetAllFlowersQuery } from '../../../services/flowerApi';
 import EditFlower from './EditFlower'; // Import the EditFlower component
 import { Modal } from 'antd'; // Import Modal from antd
+import CreateFlower from './CreateFlower'; 
 
 
 const FlowerManager = () => {
@@ -26,7 +27,7 @@ const FlowerManager = () => {
     const [selectedFlower, setSelectedFlower] = useState(null);
     const { data: flowers, error, isLoading, refetch } = useGetAllFlowersQuery();
     const [deleteFlower, { isLoading: loadingDelete }] = useDeleteFlowerMutation();
-    const [createFlower, { isLoading: loadingCreate }] = useCreateflowerMutation();
+
 
     React.useEffect(() => {
         setIsVisible(Object.keys(filteredInfo).length > 0);
@@ -170,7 +171,11 @@ const FlowerManager = () => {
             title: 'Price',
             dataIndex: 'price',
             key: 'price',
-            render: (price) => `${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} VND`,
+            render: (price) => (
+                <Tag color="red">
+                    {`${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} VND`}
+                </Tag>
+            ),
             sorter: (a, b) => a.price - b.price,
             sortOrder: sortedInfo.columnKey === 'price' && sortedInfo.order,
         },
@@ -184,7 +189,7 @@ const FlowerManager = () => {
             title: 'Image',
             dataIndex: 'imageUrl',
             key: 'imageUrl',
-            render: (imageUrl) => <img src={`http://localhost:3000${imageUrl}`} alt="flower" style={{ width: 50, height: 50 }} />,
+            render: (imageUrl) => <img src={`http://localhost:8000/${imageUrl}`} alt="flower" style={{ width: 50, height: 50 }} />,
         },
         {
             title: 'Hành động',
@@ -221,26 +226,6 @@ const FlowerManager = () => {
         setSelectedFlower(null);
     };
 
-    const handleCreateFlower = async (values) => {
-        // Update the imageUrl to file
-        const updatedValues = {
-            ...values,
-            file: values.imageUrl, // Change imageUrl to file
-        };
-        delete updatedValues.imageUrl; // Remove the old imageUrl field
-
-        console.log(updatedValues);
-        try {
-            await createFlower(updatedValues).unwrap();
-            message.success('Flower created successfully!');
-            refetch();
-            handleCloseModal();
-        } catch (error) {
-            message.error('Failed to create flower: ' + (error.data?.message || 'An unknown error occurred'));
-        }
-    };
-
-
     const handleOpenCreateModal = () => {
         setSelectedFlower(null);
         setIsModalVisible(true);
@@ -273,7 +258,7 @@ const FlowerManager = () => {
 
 
             <Table
-                className='w-full'
+                className='w-full min-h-[500px]'
                 columns={columns}
                 dataSource={filteredFlowers}
                 rowKey="_id"
@@ -296,7 +281,11 @@ const FlowerManager = () => {
                 onCancel={handleCloseModal}
                 footer={null}
             >
-                <EditFlower flower={selectedFlower} onClose={handleCloseModal} refetch={refetch} loadingCreate={loadingCreate} onCreate={handleCreateFlower} />
+                {selectedFlower ? (
+                    <EditFlower flower={selectedFlower} onClose={handleCloseModal} refetch={refetch} />
+                ) : (
+                    <CreateFlower onClose={handleCloseModal} refetch={refetch} />
+                )}
             </Modal>
         </div>
     );

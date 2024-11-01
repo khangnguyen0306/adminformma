@@ -2,16 +2,20 @@ import { flowerApi } from "../services/flowerApi";
 import flowerReducer from "../slices/flower.slice";
 import { productAPI } from "../services/productAPI";
 import ProductReducer from "../slices/product.slice";
-import { userAPI } from "../services/userAPI";
 import UserReducer from "../slices/user.slice";
 import { authApi } from "../services/authAPI";
 import AuthReducer from "../slices/auth.slice";
+import { userAPI } from "../services/userAPI";
+
+
+
 
 import { combineReducers } from "redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // Sử dụng localStorage
-
+import OrderReducer from "../slices/order.slice";
+import { orderAPI } from "../services/orderApi";
 const persistConfig = {
   key: "root",
   storage,
@@ -25,6 +29,7 @@ const persistedReducer = persistReducer(persistConfig, flowerReducer);
 const ProductPerisReducer = persistReducer(persistConfig, ProductReducer);
 const UserPerisReducer = persistReducer(persistConfig, UserReducer);
 const AuthPerisReducer = persistReducer(persistConfig, AuthReducer);
+const OrderPerisReducer = persistReducer(persistConfig, OrderReducer);
 export const store = configureStore({
   reducer: {
     [flowerApi.reducerPath]: flowerApi.reducer,
@@ -35,13 +40,16 @@ export const store = configureStore({
     user: UserPerisReducer,
     [authApi.reducerPath]: authApi.reducer,
     auth: AuthPerisReducer,
+    [orderAPI.reducerPath]: orderAPI.reducer,
+    order: OrderPerisReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       flowerApi.middleware,
       productAPI.middleware,
       userAPI.middleware,
-      authApi.middleware
+      authApi.middleware,
+      orderAPI.middleware,
     ),
 });
 
